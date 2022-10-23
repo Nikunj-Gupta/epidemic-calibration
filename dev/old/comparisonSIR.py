@@ -9,8 +9,9 @@ def lecture(filename):
 	df = pd.read_csv(filename)
 	return df
 
-def pretraitement(df, state=None):
-	COLUMNS = ['UID', 'iso2', 'iso3', 'code3', 'FIPS', 'Admin2', 'Province_State', 'Country_Region', 'Lat', 'Long_', 'Combined_Key']
+def pretraitement(df, state=None, global_data=False):
+	if global_data: COLUMNS = ['Province/State', 'Country/Region', 'Lat', 'Long']
+	else: COLUMNS = ['UID', 'iso2', 'iso3', 'code3', 'FIPS', 'Admin2', 'Province_State', 'Country_Region', 'Lat', 'Long_', 'Combined_Key']
 	if state is not None:
 		# Selection des comtés d'un état donné ('New York', 'Alabama', 'Minnesota'])
 		df = df[ df.Province_State == state ].copy(deep=True)
@@ -69,7 +70,7 @@ def traitement(df, train_size):
 
 	fitted_S, fitted_I, fitted_R = fitted_model.SIRSolve(y0, t, N, beta_fit, gamma_fit)
 	
-	return df, fitted_I	
+	return df, fitted_S, fitted_I, fitted_R
 
 def posttraitement(df, fitted_I, train_size, texec):
 	mae, mse = mean_absolute_error(df['Delta'], fitted_I), mean_squared_error(df['Delta'], fitted_I)
@@ -89,13 +90,17 @@ def posttraitement(df, fitted_I, train_size, texec):
 N = 4e6 #Population NY
 train_size = 70
 
-filename = "covid-19/time_series_covid19_confirmed_US.csv"
+# filename = "covid-19/time_series_covid19_confirmed_US.csv"
+filename = "covid-19/time_series_covid19_confirmed_global.csv"
 df = lecture(filename)
-df = pretraitement(df, 'New York')
+# df = pretraitement(df, 'New York')
+df = pretraitement(df, global_data=True)
 df.drop(columns=['Date', 'Cumul'], inplace=True)
 df.to_csv('ny_confirmed.csv', sep=',', index=False)
 start = time.time()
-df, fitted_I = traitement(df, train_size)
+df, fitted_S, fitted_I, fitted_R = traitement(df, train_size)
 end = time.time()
 texec = end-start
+posttraitement(df, fitted_S, train_size, texec)
 posttraitement(df, fitted_I, train_size, texec)
+posttraitement(df, fitted_R, train_size, texec)

@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from lmfit import Model
 
-ficdata = "data/data_SIR_54.csv"
+# ficdata = "data/data_SIR_54.csv" # doubt 
+ficdata = "data/data_SIRD__n5.csv"
 data = pd.read_csv(ficdata)
 
 print("Loading "+ficdata+"...")
