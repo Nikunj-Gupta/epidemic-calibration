@@ -75,17 +75,18 @@ def data_gen(name_tab, size, result, n):
 
 #------------------------Main-----------------------#
 
-test = True #Easier testing removing human input
+if __name__ == "__main__": 
+    test = True #Easier testing removing human input
 
 
-name_tab, cor_tab, size, params, y0 , N, n, t = init(test)
+    name_tab, cor_tab, size, params, y0 , N, n, t = init(test)
 
-res = odeint(model_deriv, y0, t, args=(N, params, cor_tab, size)) 
-result = res.T
+    res = odeint(model_deriv, y0, t, args=(N, params, cor_tab, size)) 
+    result = res.T
 
-data_gen(name_tab, size, result, n)
+    data_gen(name_tab, size, result, n)
 
-for i in range(size):
-    plt.plot(t, result[i,:], alpha=0.5, lw=2, label=name_tab[i])
-plt.legend()
-plt.show()
+    for i in range(size):
+        plt.plot(t, result[i,:], alpha=0.5, lw=2, label=name_tab[i])
+    plt.legend()
+    plt.show()
