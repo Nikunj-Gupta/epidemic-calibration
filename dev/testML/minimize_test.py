@@ -76,9 +76,9 @@ parser.add_argument('--basename', type=str, default="n11", help='A required inte
 parser.add_argument('--plot', type=int, default=1, help='A required integer positional argument') 
 args = parser.parse_args()
 
-if args.model == 'sir': 
+if args.model.upper() == 'SIR': 
     model = SIRModel() 
-elif args.model == 'sird': 
+elif args.model.upper() == 'SIRD': 
     model = SIRDModel() 
 
 methods=["leastsq",'least_squares','differential_evolution','brute','basinhopping','ampgo','nelder','lbfgsb','powell','cg','cobyla','bfgs','trust-constr','tnc','slsqp','shgo','dual_annealing']
@@ -86,7 +86,7 @@ methods=["leastsq",'least_squares','differential_evolution','brute','basinhoppin
 
 data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Mae': []}
 start, end, step, basename = args.start, args.end+1, args.step, args.basename 
-configFile = f'config_{args.model}_{basename}.txt'
+configFile = f'config_{args.model.upper()}_{basename}.txt'
 
 for method in methods:
     for j in range(start,end,step):
@@ -97,6 +97,6 @@ for method in methods:
         
         data = data_set(data, j, method, fitted_parameters, mae)
 
-df = data_frame(data, start, end, step, basename, modelname=args.model)
+df = data_frame(data, start, end, step, basename, modelname=args.model.upper())
 if args.plot: 
-    final_plot(df, basename, modelname=args.model) 
+    final_plot(df, basename, modelname=args.model.upper()) 
