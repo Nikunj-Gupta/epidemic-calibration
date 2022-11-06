@@ -104,9 +104,9 @@ elif args.model.upper() == 'SIRD':
 elif args.model.upper() == 'SIRVD': 
     model = SIRVDModel() 
 
-# methods=["leastsq",'least_squares','differential_evolution','brute','basinhopping','ampgo','nelder','lbfgsb','powell','cg','cobyla','bfgs','trust-constr','tnc','slsqp','shgo','dual_annealing']
+methods=["leastsq",'least_squares','differential_evolution','brute','basinhopping','ampgo','nelder','lbfgsb','powell','cg','cobyla','bfgs','trust-constr','tnc','slsqp','shgo','dual_annealing']
 # methods=["leastsq",'least_squares']
-methods=["leastsq"]
+# methods=["leastsq"]
 
 # data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Mae': []}
 data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Alpha': [], 'Kappa': [], 'Sigma': [], 'Delta': [], 'Mae': []}
