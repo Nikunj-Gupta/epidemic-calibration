@@ -12,7 +12,7 @@ fixed_text = "#!/bin/bash\n"\
              "#SBATCH --mem=40GB\n"
 
 for noise_val in range(1, 16): 
-    for model in ['sir', 'sird']: 
+    for model in ['sirvd']: 
         command = fixed_text 
         command += "\nsource ../venvs/calibration/bin/activate\n"\
             "\nmodule load python/intel/3.8.6\n"\

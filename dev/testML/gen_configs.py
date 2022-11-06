@@ -10,6 +10,8 @@ if args.model == 'SIR':
     fic.write( "3e8\n1\n0\n" + "data_SIR_175_n"+str(noise_val)+".csv\n" + "Infected\nInfected\nInfected\n37\n0.3\n0.1") 
 elif args.model == 'SIRD':
     fic.write( "3e8\n1\n0\n0\n" + "data_SIRD_175_n"+str(noise_val)+".csv\n" + "Infected\nDeath\n34\n0.3\n0.1\n0.02") 
+elif args.model == 'SIRVD':
+    fic.write( "3e8\n1\n0\n0\n0\n" + "data_SIRVD_175_n"+str(noise_val)+".csv\n" + "Infected\nDeath\n34\n0.3\n0.1\n0.02\n0.1\n0.3") 
 fic.close() 
 
 
