@@ -59,7 +59,7 @@ def data_set(data, train_size, methods, fitted_parameters, mae, model='SIRVD'):
         data['Delta'].append(fitted_parameters[4])
         data['Kappa'].append(None) 
         gt_vector = [0.75, 0.1, 0.01, 0.02, 0.05] 
-    data['mse'] = mean_squared_error(gt_vector, fitted_parameters) 
+    data['mse'].append(mean_squared_error(gt_vector, fitted_parameters)) 
     data['Mae'].append(mae)
 
     return data
@@ -111,10 +111,11 @@ elif args.model.upper() == 'SIRVD':
 
 methods=["leastsq",'least_squares','differential_evolution','brute','basinhopping','ampgo','nelder','lbfgsb','powell','cg','cobyla','bfgs','trust-constr','tnc','slsqp','shgo','dual_annealing']
 # methods=["leastsq",'least_squares']
+# methods=["leastsq", 'least_squares', 'brute']
 # methods=["leastsq"]
 
 # data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Mae': []}
-data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Alpha': [], 'Kappa': [], 'Sigma': [], 'Delta': [], 'Mae': []}
+data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Alpha': [], 'Kappa': [], 'Sigma': [], 'Delta': [], 'Mae': [], 'mse': []}
 start, end, step, basename = args.start, args.end+1, args.step, args.basename 
 configFile = f'config_{args.model.upper()}_{basename}.txt'
 
