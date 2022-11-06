@@ -22,7 +22,7 @@ R0 = 0 #Initial number of recovered
 D0 = 0 #Initial number of quarantined
 V0 = 0 #Initial number of vaccinated
 S0 = N - I0 - R0 - V0 #initial number of susceptible 
-y0 = S0, I0, R0, D0, V0
+y0 = S0, I0, R0, V0, D0 
 
 
 #parameters (to determine)
