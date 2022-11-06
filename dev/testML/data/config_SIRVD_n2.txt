@@ -1,0 +1,14 @@
+3e8
+1
+0
+0
+0
+data_SIRVD_175_n2.csv
+Infected
+Death
+34
+0.3
+0.1
+0.02
+0.1
+0.3
