@@ -5,16 +5,20 @@ END = 72
 STEP = 1 
 
 gen_data: 
-	$(foreach var,$(NOISE), python SIR_odeint_api.py --noise_val $(var);) 
-	$(foreach var,$(NOISE), python SIRD_odeint_api.py --noise_val $(var);) 
+	# $(foreach var,$(NOISE), python SIR_odeint_api.py --noise_val $(var);) 
+	# $(foreach var,$(NOISE), python SIRD_odeint_api.py --noise_val $(var);) 
+	$(foreach var,$(NOISE), python SIRVD_odeint_api.py --noise_val $(var);) 
 
 gen_config: 
-	$(foreach var,$(NOISE), python gen_configs.py --model SIR --noise_val $(var);)
-	$(foreach var,$(NOISE), python gen_configs.py --model SIRD --noise_val $(var);)
+	# $(foreach var,$(NOISE), python gen_configs.py --model SIR --noise_val $(var);)
+	# $(foreach var,$(NOISE), python gen_configs.py --model SIRD --noise_val $(var);)
+	$(foreach var,$(NOISE), python gen_configs.py --model SIRVD --noise_val $(var);)
+
 
 fit: 
-	$(foreach var,$(NOISE), python minimize_test.py --model sir --start $(START) --end $(END) --step $(STEP) --basename n$(var);) 
-	$(foreach var,$(NOISE), python minimize_test.py --model sird --start $(START) --end $(END) --step $(STEP) --basename n$(var);) 
+	# $(foreach var,$(NOISE), python minimize_test.py --model sir --start $(START) --end $(END) --step $(STEP) --basename n$(var) --plot 1;) 
+	# $(foreach var,$(NOISE), python minimize_test.py --model sird --start $(START) --end $(END) --step $(STEP) --basename n$(var) --plot 1;) 
+	$(foreach var,$(NOISE), python minimize_test.py --model sirvd --start $(START) --end $(END) --step $(STEP) --basename n$(var) --plot 1;) 
 
 pipeline: gen_data gen_config fit 
 
