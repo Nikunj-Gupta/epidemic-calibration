@@ -1,6 +1,7 @@
 from matplotlib.font_manager import json_dump
 from minimize import SIRModel, SIRDModel, SIRVDModel 
 import matplotlib.pyplot as plt, pandas as pd, numpy as np, argparse 
+from sklearn.metrics import mean_squared_error 
 
 def disp(train_size, t, fitted_parameters, fit, data_nr, mae, methods):	
     fig, ax = plt.subplots(figsize=(8.26, 8.26))
@@ -45,16 +46,20 @@ def data_set(data, train_size, methods, fitted_parameters, mae, model='SIRVD'):
         data['Alpha'].append(None)
         data['Sigma'].append(None)
         data['Delta'].append(None)
+        gt_vector = [0.5, 0.1] 
     elif model=='SIRD': 
         data['Kappa'].append(fitted_parameters[2]) 
         data['Alpha'].append(None)
         data['Sigma'].append(None)
         data['Delta'].append(None)
+        gt_vector = [0.75, 0.1, 0.01] 
     elif model=='SIRVD': 
         data['Alpha'].append(fitted_parameters[2])
         data['Sigma'].append(fitted_parameters[3])
         data['Delta'].append(fitted_parameters[4])
         data['Kappa'].append(None) 
+        gt_vector = [0.75, 0.1, 0.01, 0.02, 0.05] 
+    data['mse'] = mean_squared_error(gt_vector, fitted_parameters) 
     data['Mae'].append(mae)
 
     return data
