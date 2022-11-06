@@ -1,5 +1,5 @@
 from matplotlib.font_manager import json_dump
-from minimize import SIRModel, SIRDModel 
+from minimize import SIRModel, SIRDModel, SIRVDModel 
 import matplotlib.pyplot as plt, pandas as pd, numpy as np, argparse 
 
 def disp(train_size, t, fitted_parameters, fit, data_nr, mae, methods):	
@@ -14,32 +14,53 @@ def disp(train_size, t, fitted_parameters, fit, data_nr, mae, methods):
     plt.show()
     plt.close(fig)
     
-def change_train_size(config_name, train_size):  
+def change_train_size(config_name, train_size, model='SIR'):  
     with open("data/"+config_name, "r") as f:
         data = f.readlines()
     f.close()
-    data[7] = data[7].rstrip("\n")
+    key = None 
+    if model=='SIR' or model=='SIRD': 
+        key = 7 
+    elif model=='SIRVD': 
+        key = 8 
+    data[key] = data[key].rstrip("\n")
     f = open("data/"+config_name, "r")
     replacement = ""
     for line in f:
         line = line.strip()
-        changes = line.replace(data[7], str(j))
+        changes = line.replace(data[key], str(train_size))
         replacement = replacement + changes + "\n"
     f.close()
     fout = open("data/"+config_name, "w")
     fout.write(replacement)
     fout.close()
 
-def data_set(data, train_size, methods, fitted_parameters, mae):
+def data_set(data, train_size, methods, fitted_parameters, mae, model='SIRVD'):
     data['Starting_Days'].append(train_size)
     data['Methods'].append(methods)
     data['Beta'].append(fitted_parameters[0])
     data['Gamma'].append(fitted_parameters[1])
+    if model=='SIR': 
+        data['Kappa'].append(None) 
+        data['Alpha'].append(None)
+        data['Sigma'].append(None)
+        data['Delta'].append(None)
+    elif model=='SIRD': 
+        data['Kappa'].append(fitted_parameters[2]) 
+        data['Alpha'].append(None)
+        data['Sigma'].append(None)
+        data['Delta'].append(None)
+    elif model=='SIRVD': 
+        data['Alpha'].append(fitted_parameters[2])
+        data['Sigma'].append(fitted_parameters[3])
+        data['Delta'].append(fitted_parameters[4])
+        data['Kappa'].append(None) 
     data['Mae'].append(mae)
 
     return data
 
 def data_frame(data, start, end, step, basename, modelname):
+    print(data)
     df = pd.DataFrame(data)
     df.to_csv(f'data/{modelname}_{basename}.csv', sep = ',')
     for j in range(start,end,step):
@@ -80,22 +101,26 @@ if args.model.upper() == 'SIR':
     model = SIRModel() 
 elif args.model.upper() == 'SIRD': 
     model = SIRDModel() 
+elif args.model.upper() == 'SIRVD': 
+    model = SIRVDModel() 
 
-methods=["leastsq",'least_squares','differential_evolution','brute','basinhopping','ampgo','nelder','lbfgsb','powell','cg','cobyla','bfgs','trust-constr','tnc','slsqp','shgo','dual_annealing']
+# methods=["leastsq",'least_squares','differential_evolution','brute','basinhopping','ampgo','nelder','lbfgsb','powell','cg','cobyla','bfgs','trust-constr','tnc','slsqp','shgo','dual_annealing']
 # methods=["leastsq",'least_squares']
+methods=["leastsq"]
 
-data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Mae': []}
+# data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Mae': []}
+data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Alpha': [], 'Kappa': [], 'Sigma': [], 'Delta': [], 'Mae': []}
 start, end, step, basename = args.start, args.end+1, args.step, args.basename 
 configFile = f'config_{args.model.upper()}_{basename}.txt'
 
 for method in methods:
     for j in range(start,end,step):
-        change_train_size(configFile, j)
+        change_train_size(configFile, j, model=args.model.upper())
         out, data_nr, fitted_parameters, fit, mae, t = model.fit(configFile , method)
         # data2 = data_nr[1,:]
         #~ disp(j, t, fitted_parameters, fit, data2, mae, method)
         
-        data = data_set(data, j, method, fitted_parameters, mae)
+        data = data_set(data, j, method, fitted_parameters, mae, model=args.model.upper())
 
 df = data_frame(data, start, end, step, basename, modelname=args.model.upper())
 if args.plot: 
