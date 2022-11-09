@@ -3,7 +3,7 @@ from minimize import SIRModel, SIRDModel, SIRVDModel
 import matplotlib.pyplot as plt, pandas as pd, numpy as np, argparse 
 from sklearn.metrics import mean_squared_error 
 
-def disp(train_size, t, fitted_parameters, fit, data_nr, mae, methods):	
+def disp(train_size, t, fitted_parameters, fit, data_nr, mae, methods, basename, modelname):	
     fig, ax = plt.subplots(figsize=(8.26, 8.26))
     ax.set_ylim(0,data_nr.max()*1.1)
     ax.set_title('Infected')
@@ -12,7 +12,8 @@ def disp(train_size, t, fitted_parameters, fit, data_nr, mae, methods):
     ax.plot(t, fit[:][1], 'g-', label=f'Simulation')
     ax.vlines(t, data_nr, fit[:][1], color='g', linestyle=':', label=f'MAE = {mae:.1f}')
     fig.legend(loc='upper center')
-    plt.show()
+    # plt.show()
+    plt.savefig(f'graphs/graph_{modelname}_{basename}_{method}_{train_size}.png')
     plt.close(fig)
     
 def change_train_size(config_name, train_size, model='SIR'):  
@@ -111,7 +112,8 @@ elif args.model.upper() == 'SIRVD':
 
 methods=["leastsq",'least_squares','differential_evolution','brute','basinhopping','ampgo','nelder','lbfgsb','powell','cg','cobyla','bfgs','trust-constr','tnc','slsqp','shgo','dual_annealing']
 # methods=["leastsq",'least_squares']
-# methods=["leastsq", 'least_squares', 'brute']
+# methods=["powell", "trust-constr"]
+# methods=["trust-constr"]
 # methods=["leastsq"]
 
 # data = {'Starting_Days': [], 'Methods': [], 'Beta': [], 'Gamma': [], 'Mae': []}
@@ -124,8 +126,9 @@ for method in methods:
         change_train_size(configFile, j, model=args.model.upper())
         out, data_nr, fitted_parameters, fit, mae, t = model.fit(configFile , method)
         # data2 = data_nr[1,:]
-        #~ disp(j, t, fitted_parameters, fit, data2, mae, method)
-        
+        if args.model.upper() == 'SIRVD': data2 = data_nr 
+        else: data2 = data_nr[1,:] 
+        disp(j, t, fitted_parameters, fit, data2, mae, method, basename, modelname=args.model.upper())
         data = data_set(data, j, method, fitted_parameters, mae, model=args.model.upper())
 
 df = data_frame(data, start, end, step, basename, modelname=args.model.upper())

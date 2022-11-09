@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16 
-#SBATCH --time=24:00:00
+#SBATCH --time=100:00:00
 #SBATCH --mem=40GB
 
 source ../venvs/calibration/bin/activate
