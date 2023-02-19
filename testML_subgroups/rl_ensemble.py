@@ -173,8 +173,6 @@ checkpoint_callback = CheckpointCallback(
   save_freq=SAVE_FREQ,
   save_path=LOGDIR,
   name_prefix="rl_model",
-  save_replay_buffer=True,
-  save_vecnormalize=True,
 )
 # Separate evaluation env
 eval_env = CustomEnv(obs_dim=NUM_PARAMS, act_dim=ACT_DIM) 
