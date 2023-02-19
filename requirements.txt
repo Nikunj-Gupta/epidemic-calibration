@@ -4,3 +4,4 @@ matplotlib
 pandas
 lmfit
 sklearn
+gym==0.21.0
