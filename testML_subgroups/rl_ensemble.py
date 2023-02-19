@@ -15,7 +15,7 @@ from sklearn.metrics import mean_absolute_error
 parser = argparse.ArgumentParser(description='Optional app description') 
 parser.add_argument('--total_timesteps', type=int, default=100_000) 
 parser.add_argument('--max_ep_len', type=int, default=10) 
-parser.add_argument('--done_reward', type=int, default=0) 
+parser.add_argument('--done_reward', type=int, default=25_000_000) 
 parser.add_argument('--norm_reward', type=int, default=1_000_000) 
 parser.add_argument('--num_params', type=int, default=2) # SIR 
 parser.add_argument('--eval_trials', type=int, default=10) 
